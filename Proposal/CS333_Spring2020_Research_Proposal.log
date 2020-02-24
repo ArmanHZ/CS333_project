@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019/Arch Linux) (preloaded format=latex 2020.2.20)  22 FEB 2020 17:32
+This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019/Arch Linux) (preloaded format=pdflatex 2020.2.20)  24 FEB 2020 10:30
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -112,9 +112,9 @@ File: ot1ptm.fd 2001/06/04 font definitions for OT1/ptm.
 \big@size=\dimen111
 
 *geometry* driver: auto-detecting
-*geometry* detected driver: dvips
+*geometry* detected driver: pdftex
 *geometry* verbose mode - [ preamble ] result:
-* driver: dvips
+* driver: pdftex
 * paper: <default>
 * layout: <same size as paper>
 * layoutoffset:(h,v)=(0.0pt,0.0pt)
@@ -187,23 +187,33 @@ LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <17.28> not available
 LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <10.95> not available
 (Font)              Font shape `OT1/ptm/b/n' tried instead on input line 15.
 LaTeX Font Info:    Trying to load font information for OMS+ptm on input line 2
-7.
+9.
 (/usr/share/texmf-dist/tex/latex/psnfss/omsptm.fd
 File: omsptm.fd 
 )
 LaTeX Font Info:    Font shape `OMS/ptm/m/n' in size <10.95> not available
-(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 27.
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 29.
  [1
 
-]
-(./CS333_Spring2020_Research_Proposal.aux) ) 
+{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}] (./CS333_Spring2020_Resear
+ch_Proposal.aux) ) 
 Here is how much of TeX's memory you used:
- 933 strings out of 492168
- 12992 string characters out of 6131584
- 81104 words of memory out of 5000000
+ 940 strings out of 492167
+ 13039 string characters out of 6131558
+ 81075 words of memory out of 5000000
  5334 multiletter control sequences out of 15000+600000
- 17486 words of font info for 44 fonts, out of 8000000 for 9000
+ 24128 words of font info for 50 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 25i,6n,34p,842b,197s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 25i,6n,34p,309b,197s stack positions out of 5000i,500n,10000p,200000b,80000s
+{/usr/share/texmf-dist/fonts/enc/dvips/base/8r.enc}</usr/shar
+e/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/texmf-dist/f
+onts/type1/urw/times/utmb8a.pfb></usr/share/texmf-dist/fonts/type1/urw/times/ut
+mr8a.pfb></usr/share/texmf-dist/fonts/type1/urw/times/utmri8a.pfb>
+Output written on CS333_Spring2020_Research_Proposal.pdf (1 page, 51312 bytes).
 
-Output written on CS333_Spring2020_Research_Proposal.dvi (1 page, 2816 bytes).
+PDF statistics:
+ 25 PDF objects out of 1000 (max. 8388607)
+ 17 compressed objects within 1 object stream
+ 0 named destinations out of 1000 (max. 500000)
+ 1 words of extra memory for PDF output out of 10000 (max. 10000000)
+
