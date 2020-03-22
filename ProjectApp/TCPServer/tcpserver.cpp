@@ -4,7 +4,7 @@ TcpServer::TcpServer(QObject *parent) : QObject(parent) {
     server = new QTcpServer(this);
     connect(server, SIGNAL(newConnection()), this, SLOT(createNewConnection()));
 
-    if (!server->listen(QHostAddress::Any, 1234))
+    if (!server->listen(QHostAddress::Any, 56234))
         qDebug() << " Error while starting the server!";
     else
         qDebug() << " Server started!";
@@ -12,9 +12,10 @@ TcpServer::TcpServer(QObject *parent) : QObject(parent) {
 
 void TcpServer::createNewConnection() {
     QTcpSocket *socket = server->nextPendingConnection();
+    qDebug() << "Received a connection!";
     socket->write("Hello from the server\r\n");
     socket->flush();
-    socket->waitForBytesWritten(3000);
+    socket->waitForBytesWritten();
     socket->close();
 }
 

@@ -3,16 +3,20 @@
 
 #include <QObject>
 #include <QTcpSocket>
+#include <QAbstractSocket>
 #include <QString>
-#
+#include <QDebug>
+#include <QHostAddress>
+#include <QDataStream>
 
 class TcpClient : public QObject {
     Q_OBJECT
 public:
     explicit TcpClient(QObject *parent = nullptr);
 
-private slots:
-    void clientConnect();
+public slots:
+    void connectToHost();
+    void readingData();
 
 private:
     QTcpSocket *socket;
