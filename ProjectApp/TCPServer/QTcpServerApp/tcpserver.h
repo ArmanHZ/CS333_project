@@ -19,6 +19,7 @@ public:
     ~TcpServer();
 
 private:
+    const int PORT = 5692;
     Ui::TcpServer *ui;
     QTcpServer *server;
     QTcpSocket *clientConnection;
@@ -30,6 +31,7 @@ private slots:
     void newConnection();
     void sendButtonPressed();
     void onMessageReceived();
+    void clientDisconnected();
 
 };
 #endif // TCPSERVER_H

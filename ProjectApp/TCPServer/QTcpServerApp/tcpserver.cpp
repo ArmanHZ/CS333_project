@@ -9,6 +9,8 @@ TcpServer::TcpServer(QWidget *parent) : QMainWindow(parent), ui(new Ui::TcpServe
 }
 
 TcpServer::~TcpServer() {
+    server->close();
+    clientConnection->close();
     delete ui;
     delete server;
     delete clientConnection;
@@ -19,17 +21,19 @@ void TcpServer::startButtonPressed() {
     server = new QTcpServer(this);
     connect(server, SIGNAL(newConnection()), this, SLOT(newConnection()));
 
-    if (!server->listen(QHostAddress::LocalHost, 5692)) {
-        ui->plainTextEdit->insertPlainText("Error creating the server. Use an other port!\n");
+    if (!server->listen(QHostAddress::LocalHost, this->PORT)) {
+        ui->plainTextEdit->appendPlainText("Error creating the server. Use an other port!");
         exit(-1);
     } else
-        ui->plainTextEdit->insertPlainText("Server created!\n");
+        ui->plainTextEdit->appendPlainText("Server created!");
 }
 
 void TcpServer::newConnection() {
     clientConnection = server->nextPendingConnection();
+    connect(clientConnection, SIGNAL(readyRead()), this, SLOT(onMessageReceived()));
+    connect(clientConnection, SIGNAL(disconnected()), this, SLOT(clientDisconnected()));
     ui->sendButton->setEnabled(true);
-    ui->plainTextEdit->insertPlainText("A client has connected!\n");
+    ui->plainTextEdit->appendPlainText("A client has connected!");
     clientConnection->write("You are connected to the server.");
     clientConnection->flush();
     clientConnection->waitForBytesWritten();
@@ -41,7 +45,7 @@ void TcpServer::sendMessage() {
         clientConnection->write(message.toLocal8Bit());
         clientConnection->flush();
         clientConnection->waitForBytesWritten();
-        ui->plainTextEdit->insertPlainText("[Host] --> " + message + "\n");
+        ui->plainTextEdit->appendPlainText("[Host] --> " + message);
         ui->lineEdit->setText("");
     }
 }
@@ -51,9 +55,11 @@ void TcpServer::sendButtonPressed() {
         sendMessage();
 }
 
-// TODO
 void TcpServer::onMessageReceived() {
-
+    auto receivedMessage = clientConnection->readAll();
+    ui->plainTextEdit->appendPlainText("[Client] <-- " + receivedMessage);
 }
 
-
+void TcpServer::clientDisconnected() {
+    ui->plainTextEdit->appendPlainText("Client has disconnected!");
+}
