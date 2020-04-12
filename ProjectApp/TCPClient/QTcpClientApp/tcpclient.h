@@ -25,6 +25,7 @@ private:
     QTcpSocket *socket;
 
     void connectToHost();
+    void sendPublicKey();
     void sendMessage();
 
 private slots:

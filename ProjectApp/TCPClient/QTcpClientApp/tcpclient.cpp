@@ -1,5 +1,15 @@
 #include "tcpclient.h"
 #include "ui_tcpclient.h"
+#include "Crypto_utils.hpp"
+
+namespace values {
+    using namespace crypto;
+    const auto p = getNDigitRandomPrimeNumber(10);
+    const auto q = getNDigitRandomPrimeNumber(10);
+    const auto n = p * q;
+    const auto [d, e] = calculateD_E(p, q, n);
+    InfInt serverE;
+}
 
 TcpClient::TcpClient(QWidget *parent) : QMainWindow(parent), ui(new Ui::TcpClient) {
     ui->setupUi(this);
@@ -32,6 +42,16 @@ void TcpClient::connectToHost() {
     ui->sendButton->setEnabled(true);
     connect(socket, SIGNAL(readyRead()), this, SLOT(onMessageReceived()));
     connect(socket, SIGNAL(disconnected()), this, SLOT(disconnected()));
+    sendPublicKey();
+}
+
+void TcpClient::sendPublicKey() {
+    QString message = "Public key: ";
+    message.append(values::n.toString().c_str()).append(",").append(values::e.toString().c_str());
+    socket->write(message.toLocal8Bit());
+    socket->flush();
+    socket->waitForBytesWritten();
+    ui->plainTextEdit->appendPlainText("[Client] --> " + message);
 }
 
 void TcpClient::sendButtonPressed() {
@@ -42,6 +62,8 @@ void TcpClient::sendButtonPressed() {
 void TcpClient::sendMessage() {
     if (!ui->lineEdit->text().isEmpty()) {
         QString message = ui->lineEdit->text();
+        if (ui->encryptCheckBox->isChecked())
+            message = QString(crypto::encryptMessage(message.toStdString(), values::d, values::n).c_str());
         socket->write(message.toLocal8Bit());
         socket->flush();
         socket->waitForBytesWritten();
