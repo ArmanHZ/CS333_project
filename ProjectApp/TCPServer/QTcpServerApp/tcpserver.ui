@@ -32,13 +32,39 @@
       </property>
      </widget>
     </item>
-    <item row="2" column="0">
-     <widget class="QLineEdit" name="lineEdit"/>
-    </item>
     <item row="0" column="0" colspan="2">
      <widget class="QPushButton" name="startServerButton">
       <property name="text">
        <string>Start the server</string>
+      </property>
+     </widget>
+    </item>
+    <item row="2" column="0">
+     <widget class="QLineEdit" name="lineEdit"/>
+    </item>
+    <item row="3" column="1">
+     <widget class="QCheckBox" name="encryptCheckBox">
+      <property name="toolTip">
+       <string/>
+      </property>
+      <property name="text">
+       <string>Encrypt</string>
+      </property>
+      <property name="checked">
+       <bool>true</bool>
+      </property>
+     </widget>
+    </item>
+    <item row="4" column="1">
+     <widget class="QCheckBox" name="decryptCheckBox">
+      <property name="toolTip">
+       <string>Decrypts the incoming meesage. Uncheck for demonstration purposes.</string>
+      </property>
+      <property name="text">
+       <string>Decrypt</string>
+      </property>
+      <property name="checked">
+       <bool>true</bool>
       </property>
      </widget>
     </item>

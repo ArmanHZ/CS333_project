@@ -1,5 +1,15 @@
 #include "tcpserver.h"
 #include "ui_tcpserver.h"
+#include "Crypto_utils.hpp"
+
+namespace values {
+    using namespace crypto;
+    const auto p = getNDigitRandomPrimeNumber(10);
+    const auto q = getNDigitRandomPrimeNumber(10);
+    const auto n = p * q;
+    const auto [d, e] = calculateD_E(p, q, n);
+    InfInt clientE;
+}
 
 TcpServer::TcpServer(QWidget *parent) : QMainWindow(parent), ui(new Ui::TcpServer) {
     ui->setupUi(this);
@@ -42,6 +52,8 @@ void TcpServer::newConnection() {
 void TcpServer::sendMessage() {
     if (!ui->lineEdit->text().isEmpty()) {
         QString message = ui->lineEdit->text();
+        if (ui->encryptCheckBox->isChecked())
+            message = QString(crypto::encryptMessage(message.toStdString(), values::e, values::n).c_str());
         clientConnection->write(message.toLocal8Bit());
         clientConnection->flush();
         clientConnection->waitForBytesWritten();
@@ -56,6 +68,7 @@ void TcpServer::sendButtonPressed() {
 }
 
 void TcpServer::onMessageReceived() {
+//    if (ui->decryptCheckBox->isChecked())
     auto receivedMessage = clientConnection->readAll();
     ui->plainTextEdit->appendPlainText("[Client] <-- " + receivedMessage);
 }
