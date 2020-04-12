@@ -9,6 +9,7 @@ namespace values {
     const auto n = p * q;
     const auto [d, e] = calculateD_E(p, q, n);
     InfInt clientE;
+    InfInt clientN;
 }
 
 TcpServer::TcpServer(QWidget *parent) : QMainWindow(parent), ui(new Ui::TcpServer) {
@@ -68,9 +69,31 @@ void TcpServer::sendButtonPressed() {
 }
 
 void TcpServer::onMessageReceived() {
-//    if (ui->decryptCheckBox->isChecked())
-    auto receivedMessage = clientConnection->readAll();
-    ui->plainTextEdit->appendPlainText("[Client] <-- " + receivedMessage);
+    static bool firstMessage = true;
+    if (firstMessage) {
+        auto receivedMessage = clientConnection->readAll();
+        auto publicKeyPair = receivedMessage.toStdString().substr(11);
+        QString publicKeyPairAsQString = publicKeyPair.c_str();
+        auto qPair = publicKeyPairAsQString.split(",");
+        values::clientN = qPair.at(0).toStdString();
+        values::clientE = qPair.at(1).toStdString();
+//        ui->plainTextEdit->appendPlainText("[Client] <-- " + receivedMessage);
+//        std::cout << "Client N: " << values::clientN << "\nClient E: " << values::clientE << "\n";
+        firstMessage = false;
+        return;
+    }
+    if (ui->decryptCheckBox->isChecked()) {
+        std::cout << "In decrypt if" << std::endl;
+        auto receivedMessage = clientConnection->readAll();
+        std::cout << "Received Message: " << receivedMessage.toStdString() << std::endl;
+        auto decryptedMessage = crypto::decryptMessage(receivedMessage.toStdString(), values::clientE, values::clientN);
+        std::cout << "Decrypted message: " << decryptedMessage << std::endl;
+        ui->plainTextEdit->appendPlainText("[Client] <-- " + QString(decryptedMessage.c_str()));
+        std::cout << "print to screen" << std::endl;
+    } else {
+        auto receivedMessage = clientConnection->readAll();
+        ui->plainTextEdit->appendPlainText("[Client] <-- " + receivedMessage);
+    }
 }
 
 void TcpServer::clientDisconnected() {

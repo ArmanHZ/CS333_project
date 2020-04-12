@@ -1,0 +1,4 @@
+#ifndef CRYPTO_UTILS_HPP
+#define CRYPTO_UTILS_HPP
+
+#endif // CRYPTO_UTILS_HPP

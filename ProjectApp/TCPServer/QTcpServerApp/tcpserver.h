@@ -24,6 +24,7 @@ private:
     QTcpServer *server;
     QTcpSocket *clientConnection;
 
+    void readPublicKey();
     void sendMessage();
 
 private slots:
