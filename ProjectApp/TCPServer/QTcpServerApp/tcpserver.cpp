@@ -60,17 +60,18 @@ void TcpServer::sendPublicKey() {
 void TcpServer::sendMessage() {
     if (!ui->lineEdit->text().isEmpty()) {
         QString message = ui->lineEdit->text();
+        QString displayMessage = message;
         if (ui->encryptCheckBox->isChecked()) {
-//            message = QString(crypto::encryptMessage(message.toStdString(), values::d, values::n).c_str());
             auto signedMessage = sign(message);
-            std::cout << "Signed message: " << signedMessage << "\n";
             message = encyptWithClientE(signedMessage);
-            std::cout << "Encrypt with server E: " << message.toStdString() << "\n";
         }
         clientConnection->write(message.toLocal8Bit());
         clientConnection->flush();
         clientConnection->waitForBytesWritten();
-        ui->plainTextEdit->appendPlainText("[Host] --> " + message);
+        if (ui->debugInfo->isChecked())
+            ui->plainTextEdit->appendPlainText("[Host] --> " + message);
+        else
+            ui->plainTextEdit->appendPlainText("[Host] --> " + displayMessage);
         ui->lineEdit->setText("");
     }
 }
@@ -103,7 +104,6 @@ void TcpServer::onMessageReceived() {
     }
     if (ui->decryptCheckBox->isChecked()) {
         auto receivedMessage = clientConnection->readAll();
-//        auto decryptedMessage = crypto::decryptMessage(receivedMessage.toStdString(), values::clientE, values::clientN);
         auto decryptedMessage = decryptWithServerD(receivedMessage);
         auto unsignedMessage = unsign(decryptedMessage);
         ui->plainTextEdit->appendPlainText("[Client] <-- " + unsignedMessage);

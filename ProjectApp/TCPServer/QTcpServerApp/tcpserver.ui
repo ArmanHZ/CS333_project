@@ -15,6 +15,41 @@
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout">
+    <item row="3" column="1">
+     <widget class="QCheckBox" name="encryptCheckBox">
+      <property name="cursor">
+       <cursorShape>PointingHandCursor</cursorShape>
+      </property>
+      <property name="toolTip">
+       <string/>
+      </property>
+      <property name="text">
+       <string>Encrypt</string>
+      </property>
+      <property name="checked">
+       <bool>true</bool>
+      </property>
+     </widget>
+    </item>
+    <item row="2" column="0">
+     <widget class="QLineEdit" name="lineEdit"/>
+    </item>
+    <item row="4" column="1">
+     <widget class="QCheckBox" name="decryptCheckBox">
+      <property name="cursor">
+       <cursorShape>PointingHandCursor</cursorShape>
+      </property>
+      <property name="toolTip">
+       <string>Decrypts the incoming meesage. Uncheck for demonstration purposes.</string>
+      </property>
+      <property name="text">
+       <string>Decrypt</string>
+      </property>
+      <property name="checked">
+       <bool>true</bool>
+      </property>
+     </widget>
+    </item>
     <item row="2" column="1">
      <widget class="QPushButton" name="sendButton">
       <property name="enabled">
@@ -39,32 +74,13 @@
       </property>
      </widget>
     </item>
-    <item row="2" column="0">
-     <widget class="QLineEdit" name="lineEdit"/>
-    </item>
-    <item row="3" column="1">
-     <widget class="QCheckBox" name="encryptCheckBox">
-      <property name="toolTip">
-       <string/>
+    <item row="5" column="1">
+     <widget class="QCheckBox" name="debugInfo">
+      <property name="cursor">
+       <cursorShape>PointingHandCursor</cursorShape>
       </property>
       <property name="text">
-       <string>Encrypt</string>
-      </property>
-      <property name="checked">
-       <bool>true</bool>
-      </property>
-     </widget>
-    </item>
-    <item row="4" column="1">
-     <widget class="QCheckBox" name="decryptCheckBox">
-      <property name="toolTip">
-       <string>Decrypts the incoming meesage. Uncheck for demonstration purposes.</string>
-      </property>
-      <property name="text">
-       <string>Decrypt</string>
-      </property>
-      <property name="checked">
-       <bool>true</bool>
+       <string>Debug Info</string>
       </property>
      </widget>
     </item>
