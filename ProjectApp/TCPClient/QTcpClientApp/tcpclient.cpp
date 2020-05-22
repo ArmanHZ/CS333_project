@@ -63,17 +63,18 @@ void TcpClient::sendButtonPressed() {
 void TcpClient::sendMessage() {
     if (!ui->lineEdit->text().isEmpty()) {
         QString message = ui->lineEdit->text();
-        std::cout << "Outside if: " << message.toStdString() << "\n";
+        QString displayMessage = message;
         if (ui->encryptCheckBox->isChecked()) {
             auto signedMessage = sign(message);
-            std::cout << "Signed message: " << signedMessage << "\n";
             message = encyptWithServerE(signedMessage);
-            std::cout << "Encrypt with server E: " << message.toStdString() << "\n";
         }
         socket->write(message.toLocal8Bit());
         socket->flush();
         socket->waitForBytesWritten();
-        ui->plainTextEdit->appendPlainText("[Client] --> " + message);
+        if (ui->debugInfo->isChecked())
+            ui->plainTextEdit->appendPlainText("[Client] --> " + message);
+        else
+            ui->plainTextEdit->appendPlainText("[Client] --> " + displayMessage);
         ui->lineEdit->setText("");
     }
 }
