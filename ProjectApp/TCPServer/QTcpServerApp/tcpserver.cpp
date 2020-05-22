@@ -45,22 +45,42 @@ void TcpServer::newConnection() {
     connect(clientConnection, SIGNAL(disconnected()), this, SLOT(clientDisconnected()));
     ui->sendButton->setEnabled(true);
     ui->plainTextEdit->appendPlainText("A client has connected!");
-    clientConnection->write("You are connected to the server.");
+    sendPublicKey();
+}
+
+void TcpServer::sendPublicKey() {
+    QString message = "Public key: ";
+    message.append(values::n.toString().c_str()).append(",").append(values::e.toString().c_str());
+    clientConnection->write(message.toLocal8Bit());
     clientConnection->flush();
     clientConnection->waitForBytesWritten();
+    ui->plainTextEdit->appendPlainText("[Server] --> " + message);
 }
 
 void TcpServer::sendMessage() {
     if (!ui->lineEdit->text().isEmpty()) {
         QString message = ui->lineEdit->text();
-        if (ui->encryptCheckBox->isChecked())
-            message = QString(crypto::encryptMessage(message.toStdString(), values::e, values::n).c_str());
+        if (ui->encryptCheckBox->isChecked()) {
+//            message = QString(crypto::encryptMessage(message.toStdString(), values::d, values::n).c_str());
+            auto signedMessage = sign(message);
+            std::cout << "Signed message: " << signedMessage << "\n";
+            message = encyptWithClientE(signedMessage);
+            std::cout << "Encrypt with server E: " << message.toStdString() << "\n";
+        }
         clientConnection->write(message.toLocal8Bit());
         clientConnection->flush();
         clientConnection->waitForBytesWritten();
         ui->plainTextEdit->appendPlainText("[Host] --> " + message);
         ui->lineEdit->setText("");
     }
+}
+
+std::string TcpServer::sign(QString initialMessage) {
+    return crypto::encryptMessage(initialMessage.toStdString(), values::d, values::n);
+}
+
+QString TcpServer::encyptWithClientE(std::string signedMessage) {
+    return QString(crypto::encryptMessage(signedMessage, values::clientE, values::clientN).c_str());
 }
 
 void TcpServer::sendButtonPressed() {
@@ -77,23 +97,28 @@ void TcpServer::onMessageReceived() {
         auto qPair = publicKeyPairAsQString.split(",");
         values::clientN = qPair.at(0).toStdString();
         values::clientE = qPair.at(1).toStdString();
-//        ui->plainTextEdit->appendPlainText("[Client] <-- " + receivedMessage);
-//        std::cout << "Client N: " << values::clientN << "\nClient E: " << values::clientE << "\n";
         firstMessage = false;
+        ui->plainTextEdit->appendPlainText("[Client] <-- " + receivedMessage);
         return;
     }
     if (ui->decryptCheckBox->isChecked()) {
-        std::cout << "In decrypt if" << std::endl;
         auto receivedMessage = clientConnection->readAll();
-        std::cout << "Received Message: " << receivedMessage.toStdString() << std::endl;
-        auto decryptedMessage = crypto::decryptMessage(receivedMessage.toStdString(), values::clientE, values::clientN);
-        std::cout << "Decrypted message: " << decryptedMessage << std::endl;
-        ui->plainTextEdit->appendPlainText("[Client] <-- " + QString(decryptedMessage.c_str()));
-        std::cout << "print to screen" << std::endl;
+//        auto decryptedMessage = crypto::decryptMessage(receivedMessage.toStdString(), values::clientE, values::clientN);
+        auto decryptedMessage = decryptWithServerD(receivedMessage);
+        auto unsignedMessage = unsign(decryptedMessage);
+        ui->plainTextEdit->appendPlainText("[Client] <-- " + unsignedMessage);
     } else {
         auto receivedMessage = clientConnection->readAll();
         ui->plainTextEdit->appendPlainText("[Client] <-- " + receivedMessage);
     }
+}
+
+std::string TcpServer::decryptWithServerD(QString receivedMessage) {
+    return crypto::decryptMessage(receivedMessage.toStdString(), values::d, values::n);
+}
+
+QString TcpServer::unsign(std::string decryptedMessage) {
+    return QString(crypto::decryptMessage(decryptedMessage, values::clientE, values::clientN).c_str());
 }
 
 void TcpServer::clientDisconnected() {

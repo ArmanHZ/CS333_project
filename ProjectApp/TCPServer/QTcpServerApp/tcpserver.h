@@ -26,6 +26,11 @@ private:
 
     void readPublicKey();
     void sendMessage();
+    void sendPublicKey();
+    std::string sign(QString);
+    QString encyptWithClientE(std::string);
+    std::string decryptWithServerD(QString);
+    QString unsign(std::string);
 
 private slots:
     void startButtonPressed();
