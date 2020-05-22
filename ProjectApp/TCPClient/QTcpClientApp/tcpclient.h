@@ -27,6 +27,10 @@ private:
     void connectToHost();
     void sendPublicKey();
     void sendMessage();
+    std::string sign(QString);
+    QString encyptWithServerE(std::string);
+    std::string decryptWithClientD(QString);
+    QString unsign(std::string);
 
 private slots:
     void connectButtonPressed();
